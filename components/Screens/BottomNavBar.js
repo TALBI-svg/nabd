@@ -11,19 +11,38 @@ export default function BottomNavBar() {
       <View style={styles.WrapperBottomNavbar}>
         <View style={styles.BottomNavbar}>
           <TouchableOpacity>
-          <Image source={require('../../layout/images/BottomNavBar_cions/world.png')} resizeMode="contain" style={styles.BottomNavbarImage}/>
+          <View style={styles.BottomNavbarContent}>
+            <Image source={require('../../layout/images/BottomNavBar_cions/world.png')} resizeMode="contain" style={styles.BottomNavbarContentImage}/>
+            <Text style={styles.BottomNavbarContentText}>اخر الاخبار</Text>
+          </View>
           </TouchableOpacity>
+
           <TouchableOpacity>
-          <Image source={require('../../layout/images/BottomNavBar_cions/ball.png')} resizeMode="contain" style={styles.BottomNavbarImage}/>
+          <View style={styles.BottomNavbarContent}>
+            <Image source={require('../../layout/images/BottomNavBar_cions/ball.png')} resizeMode="contain" style={styles.BottomNavbarContentImage}/>
+            <Text style={styles.BottomNavbarContentText}>رياضة</Text>
+          </View>
           </TouchableOpacity>
+
           <TouchableOpacity>
-          <Image source={require('../../layout/images/BottomNavBar_cions/list.png')} resizeMode="contain" style={styles.BottomNavbarImage}/>
+          <View style={styles.BottomNavbarContent}>
+            <Image source={require('../../layout/images/BottomNavBar_cions/list.png')} resizeMode="contain" style={styles.BottomNavbarContentImage}/>
+            <Text style={styles.BottomNavbarContentText}>مصادري</Text>
+          </View>
           </TouchableOpacity>
+
           <TouchableOpacity>
-          <Image source={require('../../layout/images/BottomNavBar_cions/book.png')} resizeMode="contain" style={styles.BottomNavbarImage}/>
-          </TouchableOpacity>
+          <View style={styles.BottomNavbarContent}>
+            <Image source={require('../../layout/images/BottomNavBar_cions/book.png')} resizeMode="contain" style={styles.BottomNavbarContentImage}/>
+            <Text style={styles.BottomNavbarContentText}>مجلات نبض</Text>
+          </View>
+           </TouchableOpacity>
+
           <TouchableOpacity>
-          <Image source={require('../../layout/images/BottomNavBar_cions/user.png')} resizeMode="contain" style={styles.BottomNavbarImage}/>
+          <View style={styles.BottomNavbarContent}>
+            <Image source={require('../../layout/images/BottomNavBar_cions/user.png')} resizeMode="contain" style={styles.BottomNavbarContentImage}/>
+            <Text style={styles.BottomNavbarContentText}>حسابي</Text>
+          </View>
           </TouchableOpacity>
         </View>
     
@@ -35,7 +54,7 @@ export default function BottomNavBar() {
 const styles = StyleSheet.create({
     containner: {
         flex:1,
-        backgroundColor:colors.backgroundScreen,
+        //backgroundColor:colors.backgroundScreen,
         height: hp('100%'), // 100% of height device screen
         width: wp('100%')   // 100% of width device screen
     },
@@ -56,10 +75,20 @@ const styles = StyleSheet.create({
         //borderColor:colors.textDark,
         //borderWidth:1,
     },
-    BottomNavbarImage: {
+    BottomNavbarContent: {
+      flexDirection:'column',
+      justifyContent:'center',
+      alignItems:'center',
+    },
+    BottomNavbarContentImage: {
         height:20,
         width:20,
         marginHorizontal:33.5,
         
+    },
+    BottomNavbarContentText: {
+      fontSize:10,
+      fontWeight:'400',
+      color:colors.textDark,
     },
 });

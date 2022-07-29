@@ -280,7 +280,6 @@ const styles = StyleSheet.create({
       width:20,
 
   },
-  ///////////////////////////////////////////////////////////////
   WrapperSettingsArea: {
       borderBottomColor:colors.light,
       borderBottomWidth:0.3,

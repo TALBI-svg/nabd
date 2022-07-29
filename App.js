@@ -22,6 +22,7 @@ import Profile from './components/Screens/Profile';
 import Magazines from './components/Screens/Magazines';
 import BottomNavBar from './components/Screens/BottomNavBar';
 import MySources from './components/Screens/MySources';
+import Sport from './components/Screens/Sport';
   
  
   
@@ -31,7 +32,7 @@ import MySources from './components/Screens/MySources';
 export default App = () => {
   return (
     <View style={styles.containner}>
-      <MySources/>
+      <Sport/>
 
     </View>
    

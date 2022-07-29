@@ -9,6 +9,7 @@ const colors = {
     secondery:'#e62c2d',
     light:'#cecece',
     lightOne:'#f5f5f5',
+    lightTwo:'#E9F6FF',
     yellow:'#ffea00',
     facebook:'#1A7BBB',
     twitter:'#1DA1F2',
