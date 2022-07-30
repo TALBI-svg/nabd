@@ -1,56 +1,63 @@
 import React from 'react'
 import { StyleSheet,View, Text,Image,StatusBar, TouchableOpacity, SafeAreaView,FlatList,TextInput, ScrollView, ImageBackground,} from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { useNavigation } from '@react-navigation/native';
+
 import colors from '../../layout/colors/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import LeaguesTypeData from '../../layout/data/LeaguesTypeData';
 import MatchesData from '../../layout/data/MatchesData';
-
 import BottomNavBar from './BottomNavBar';
 
 
+
 export default function Sport() {
-    const  renderLeaguesItem = ({item}) => {
+  const navigation = useNavigation();
+
+  
+    const renderLeaguesItem = ({item}) => {
         return(
             <TouchableOpacity>
-            <View style={styles.LeaguesArea}>
+              <View style={styles.LeaguesArea}>
                 <Image source={item.image} resizeMode="contain" style={styles.LeaguesAreaImage}/>
-                <Text style={styles.LeaguesAreaText}>{item.name}</Text>
+              <Text style={styles.LeaguesAreaText}>{item.name}</Text>
             </View></TouchableOpacity>
         )
     }
     const renderMatchesItem = ({item}) => {
         return(
-           <View style={styles.MImatchesBottom}>
-             <View style={styles.MImatchesBottomTitle}>
-               <Text style={styles.MImatchesBottomTitleText}>{item.date}</Text>
-             </View>
-
-             <View style={styles.MImatchesBottomBottom}>
-                <View  style={styles.MImatchesBottomBottomLeft}>
-                  <Text style={styles.MImatchesBottomBottomLeftText}>{item.teamLeft}</Text>
-                  <Feather name="circle" size={20} color={colors.primery} style={styles.MImatchesBottomBottomLeftIcon}/>
+            <View style={styles.MImatchesBottom}>
+                <View style={styles.MImatchesBottomTitle}>
+                  <Text style={styles.MImatchesBottomTitleText}>{item.date}</Text>
                 </View>
 
-                <View style={styles.MImatchesBottomBottomMidlle}>
+                <View style={styles.MImatchesBottomBottom}>
+
+                  <View  style={styles.MImatchesBottomBottomLeft}>
+                    <Text style={styles.MImatchesBottomBottomLeftText}>{item.teamLeft}</Text>
+                    <Feather name="circle" size={20} color={colors.primery} style={styles.MImatchesBottomBottomLeftIcon}/>
+                  </View>
+
+                  <View style={styles.MImatchesBottomBottomMidlle}>
                     <Text style={styles.MImatchesBottomBottomMidlleText}>{item.result}</Text>
                     <View style={styles.MImatchesBottomBottomMidlleBottom}>
-                        <Text style={styles.MImatchesBottomBottomMidlleBottomText}>{item.league}</Text>
-                        <Text style={styles.MImatchesBottomBottomMidlleBottomTextOne}>|</Text>
-                        <Text style={styles.MImatchesBottomBottomMidlleBottomTextTwo}>{item.done}</Text>
+                      <Text style={styles.MImatchesBottomBottomMidlleBottomText}>{item.league}</Text>
+                      <Text style={styles.MImatchesBottomBottomMidlleBottomTextOne}>|</Text>
+                      <Text style={styles.MImatchesBottomBottomMidlleBottomTextTwo}>{item.done}</Text>
                     </View>
-                </View>
+                  </View>
 
-                <View style={styles.MImatchesBottomBottomRight}>
-                  <Text style={styles.MImatchesBottomBottomRightText}>{item.teamRight}</Text>
-                  <Feather name="circle" size={20} color={colors.textDarkOne} style={styles.MImatchesBottomBottomRightIcon}/>
-                </View>
-             </View>
+                  <View style={styles.MImatchesBottomBottomRight}>
+                    <Text style={styles.MImatchesBottomBottomRightText}>{item.teamRight}</Text>
+                    <Feather name="circle" size={20} color={colors.textDarkOne} style={styles.MImatchesBottomBottomRightIcon}/>
+                  </View>
 
-           </View>
+                </View>
+            </View>
         )
     }
+    
   return (
       <View style={styles.containner}>
       {/*Header*/}

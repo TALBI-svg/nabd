@@ -1,12 +1,19 @@
 import React from 'react'
 import { StyleSheet,View, Text,Image,StatusBar, TouchableOpacity, SafeAreaView, TouchableOpacityBase, TextInput, ScrollView, ImageBackground,} from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { useNavigation } from '@react-navigation/native';
+
 import colors from '../../layout/colors/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import BottomNavBar from './BottomNavBar';
 
+
+
 export default function MySources() {
+  const navigation = useNavigation();
+
+  
   return (
     <View style={styles.containner}>
         {/*Header*/}
@@ -49,7 +56,7 @@ export default function MySources() {
 
     </ScrollView>
     <BottomNavBar/>
-    </View>
+    </View>  
   )
 }
 const styles = StyleSheet.create({
