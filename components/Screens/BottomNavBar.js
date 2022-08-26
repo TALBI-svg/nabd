@@ -5,10 +5,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import colors from '../../layout/colors/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-import Magazines from './Magazines';
-import MySources from './MySources';
-import Sport from './Sport';
-import LastNews from './LastNews';
+
 
 
 export default function BottomNavBar() {

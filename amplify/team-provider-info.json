@@ -1,0 +1,20 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-nabd-staging-195145-authRole",
+      "UnauthRoleArn": "arn:aws:iam::736094349361:role/amplify-nabd-staging-195145-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::736094349361:role/amplify-nabd-staging-195145-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-nabd-staging-195145-deployment",
+      "UnauthRoleName": "amplify-nabd-staging-195145-unauthRole",
+      "StackName": "amplify-nabd-staging-195145",
+      "StackId": "arn:aws:cloudformation:us-east-1:736094349361:stack/amplify-nabd-staging-195145/8717d490-1c0a-11ed-bf03-0e0e693ef321",
+      "AmplifyAppId": "d1d2y23lrfho96"
+    },
+    "categories": {
+      "auth": {
+        "nabd": {}
+      }
+    }
+  }
+}

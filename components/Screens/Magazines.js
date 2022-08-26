@@ -10,7 +10,7 @@ import BottomNavBar from './BottomNavBar';
 
 
 export default function Magazines() {
-  const navigation = useNavigation();
+  
 
   
   return (

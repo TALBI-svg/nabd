@@ -1,7 +1,9 @@
-import React from 'react'
+import React,{useRef} from 'react'
 import { StyleSheet,View, Text,Image,StatusBar, TouchableOpacity, SafeAreaView, TouchableOpacityBase, TextInput, ScrollView,} from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
+import { Auth} from 'aws-amplify'
+import Share from 'react-native-share';
 
 import colors from '../../layout/colors/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
@@ -12,6 +14,22 @@ import BottomNavBar from './BottomNavBar';
 export default function Profile() {
   const navigation = useNavigation();
   
+  const signOut = () => {
+    Auth.signOut();
+    navigation.navigate('Signin')
+  };
+
+  const WhenShare = async () => {
+    const shareOptions = {
+      message:'share area',
+    }
+    try {
+      const ShareResponse = await Share.open(shareOptions)
+      console.log(JSON.stringify(ShareResponse))
+    } catch (error) {
+      console.log('Error ==> ',error)
+    }
+  }
   
   return (
     <View style={styles.containner}>
@@ -130,7 +148,7 @@ export default function Profile() {
       <View style={styles.WrapperNabdApp}> 
         <View style={styles.NabdApp}>
           <Text style={styles.NabdAppTexet}>تطبيق نبض</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={WhenShare}>
           <View style={styles.NabdAppContent}>
             <Text style={styles.NabdAppContentText}>انشر تطبيق نبض</Text>
             <Image source={require('../../layout/images/Profile_icons/shear.png')} resizeMode="contain" style={styles.NabdAppContentImage}/>
@@ -194,7 +212,7 @@ export default function Profile() {
       <View style={styles.WrapperLogoutArea}>
         <View style={styles.LogoutArea}>
           <Text style={styles.LogoutAreaTexet}>تسجيل الخروج</Text>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={signOut}>
           <View style={styles.LogoutAreaContent}>
             <Text style={styles.LogoutAreaContentText}>تسجيل الخروج</Text>
             <Image source={require('../../layout/images/Profile_icons/logout.png')} resizeMode="contain" style={styles.LogoutAreaContentImage}/>
@@ -281,6 +299,7 @@ const styles = StyleSheet.create({
   },
   FavoritInteractAreaText: {
       marginRight:10,
+      color:colors.textDarkOne,
   },
   FavoritInteractAreaImage: {
       height:20,
@@ -318,6 +337,7 @@ const styles = StyleSheet.create({
   },
   SettingsAreaContentText: {
       marginRight:10,
+      color:colors.textDarkOne,
   },
   /////////////////////////////////////////////////
   WrapperNotiArea: {
@@ -346,6 +366,7 @@ const styles = StyleSheet.create({
   }, 
   NotiAreaContentText: {
       marginRight:10,
+      color:colors.textDarkOne,
   }, 
   NotiAreaContentImage: {
       height:20,

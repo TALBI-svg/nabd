@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "795637597986",
+    "project_id": "anbd-78b60",
+    "storage_bucket": "anbd-78b60.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:795637597986:android:4593b60a7fb56b0790077b",
+        "android_client_info": {
+          "package_name": "com.nabd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "795637597986-k9047f6pfda87db05rhj7aqm0jfl1set.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nabd",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "795637597986-r69p208aorrbfanhriaiuiv7gq1s93ag.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzpppBbXOvOrf_MK_4SNKYQQIMx5e4WfI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "795637597986-r69p208aorrbfanhriaiuiv7gq1s93ag.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

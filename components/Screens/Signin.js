@@ -1,11 +1,59 @@
-import React from 'react'
-import { StyleSheet,View, Text,Image,StatusBar, TouchableOpacity, SafeAreaView, TouchableOpacityBase, TextInput,} from 'react-native';
+import React,{useEffect,useState} from 'react'
+import { StyleSheet,View, Text,Image,StatusBar,Alert,TouchableOpacity, SafeAreaView, TouchableOpacityBase, TextInput,} from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { useNavigation } from '@react-navigation/native';
+import { GoogleSignin, statusCodes } from '@react-native-google-signin/google-signin';
+import { Auth } from 'aws-amplify'
+import {useForm, Controller} from 'react-hook-form';
+
 import colors from '../../layout/colors/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
 
 export default function Signin() {
+    const navigation = useNavigation();
+    const SignUp = () => {
+      navigation.navigate('Signup')
+    }
+
+    /////////////////////googleLogin/////////////////////
+    const googleLogin = async () => {
+      try {
+        await GoogleSignin.hasPlayServices();
+        const userInfo = await GoogleSignin.signIn();
+      } catch (error) {
+        if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+        } else if (error.code === statusCodes.IN_PROGRESS) {
+        } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+        } else {}
+      }
+      navigation.navigate('LastNews')
+      };
+      useEffect(() => {
+        GoogleSignin.configure()
+      
+      }, [])
+    
+    /////////////////////Login////////////////////////
+    const WhenLogin = async (data) => {
+      try {
+        await Auth.signIn(data.username, data.password);
+        navigation.navigate('LastNews');
+       } catch (e) {
+           Alert.alert('Oops', e.message);
+       }
+     };
+     const {control, handleSubmit,formState: {errors} } = useForm();
+
+     
+      
+     
+
+
+
+
+
+
   return (
     <View style={styles.containner}>
       {/*Header*/}
@@ -33,9 +81,9 @@ export default function Signin() {
           </View>
         </TouchableOpacity>
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={googleLogin}>
           <View style={[styles.SocialMediaArea,{backgroundColor:colors.backgroundOne,}]}>
-            <Text style={[styles.SocialMediaAreaText,{color:colors.textDarkOne,marginRight:20,}]}>تسجيل الدخول عبر حساب جوجل</Text>
+            <Text style={[styles.SocialMediaAreaText,{color:colors.textDark,marginRight:20,}]}>تسجيل الدخول عبر حساب جوجل</Text>
             <Image source={require('../../layout/images/Signup_icons/google.png')} style={styles.SocialMediaAreaImage}/>
           </View>
         </TouchableOpacity>
@@ -44,34 +92,72 @@ export default function Signin() {
       {/*FormContenArea*/}
       <View style={styles.WrapperFormContenArea}>
         <Text style={styles.FormContenAreaText}>او الدخول عبر البريد الالكتروني</Text>
-        <View style={styles.FormContenAreaInput}>
-          <TextInput
-           placeholderTextColor={colors.textDarkOne}
-           placeholder="اسم المستخدم"
-           style={styles.FormContenAreaInputInput}
-          />
-          <TextInput
-           placeholderTextColor={colors.textDarkOne}
-           placeholder="كلمة السر"
-           secureTextEntry
-           style={styles.FormContenAreaInputInput}
-          />
+        <View style={styles.FormContenAreaInput}> 
+        {/*Username*/} 
+        <Controller
+         rules={{
+           required: 'تاكد من ادخال اسم المستخدم',
+         }} 
+         control={control}
+         name="username"
+         render={({field: {value, onChange, onBlur}, fieldState: {error}}) => ( 
+         <>
+         <View>
+         <TextInput 
+         value={value}
+         onChangeText={onChange}
+         onBlur={onBlur}
+         placeholderTextColor={colors.textDarkOne}
+         placeholder="اسم المستخدم"
+         style={styles.FormContenAreaInputInput}
+         keyboardType="default"/></View> 
+          {error && (
+           <Text style={{color:'red',marginLeft:10, fontFamily:'Montserrat-Medium',fontSize:10,}}>
+             {error.message || 'error'}{/*error*/}
+           </Text>)}</> 
+          )}
+        /> 
+        {/*Password*/} 
+        <Controller
+         rules={{
+            required: 'تاكد من كلمة المرور',
+         }}
+         control={control}
+         name="password"
+         render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (
+         <>
+         <View>
+         <TextInput 
+         value={value}
+         onChangeText={onChange}
+         onBlur={onBlur}
+         placeholderTextColor={colors.textDarkOne}
+         placeholder="كلمة السر"
+         secureTextEntry
+         style={styles.FormContenAreaInputInput}
+         keyboardType="default"/></View>
+          {error && (
+            <Text style={{color:'red',marginLeft:10, fontFamily:'Montserrat-Medium',fontSize:10,}}>
+              {error.message || 'error'}{/*error*/}
+            </Text>)}</>
+          )}
+        />
+        
         </View>
-
         {/*FormContenAreaSubmit*/}
         <View style={styles.FormContenAreaSubmit}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleSubmit(WhenLogin)}>
             <Text style={styles.FormContenAreaSubmitText}>تسجيل الدخول</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity>
+          <TouchableOpacity onPress={SignUp}>
             <Text style={styles.FormContenAreaSubmitTextOne}>حساب جديد</Text>
           </TouchableOpacity>
         </View> 
 
         {/*FormContenAreaBottom*/}
         <View style={styles.FormContenAreaBottom}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('ForgetPassword')}>
             <Text style={styles.FormContenAreaBottomText}>نسيت كلمة السر؟</Text>
           </TouchableOpacity>  
 

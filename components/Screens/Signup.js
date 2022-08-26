@@ -1,78 +1,173 @@
-import React from 'react'
-import { StyleSheet,View, Text,Image,StatusBar, TouchableOpacity, SafeAreaView, TouchableOpacityBase, TextInput,} from 'react-native';
+import React,{useState} from 'react'
+import { StyleSheet,View, Text,Image,StatusBar,Alert,TouchableOpacity,SafeAreaView,TouchableOpacityBase,TextInput,} from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { useNavigation } from '@react-navigation/native';
+import { Auth } from 'aws-amplify'
+import {useForm, Controller} from 'react-hook-form';
+
 import colors from '../../layout/colors/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
-
+const EMAIL_REGEX = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 export default function Signup() {
+  const navigation = useNavigation();
+
+  const WhenSignup = async data => {
+    const {username, password, email} = data;
+    try {
+        await Auth.signUp({
+            username,
+            password,
+            attributes: {email, preferred_username: username}, 
+        });
+    navigation.navigate('EmailConfirmation', {username});
+    } catch (e) {
+        Alert.alert('Oops', e.message);
+    }
+
+  
+  //navigation.navigate('ConfirmEmail');
+  };
+  const {control, handleSubmit,formState: {errors},watch} = useForm();
+  const pwd = watch('password');
+
+
   return (
     <View style={styles.containner}>
       {/*Header*/}
       <SafeAreaView>
         <View style={styles.WrapperHeader}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Signin')}>
             <AntDesign name="arrowleft" size={20} color={colors.background} style={styles.HeaderLeft}/>
           </TouchableOpacity>
           <Text style={styles.HeaderRight}>حساب جديد</Text>
         </View>
       </SafeAreaView>
-      {/*SocialMediaArea*/}
-      <View style={styles.WrapperSocialMediaArea}>
-        <TouchableOpacity>
-          <View style={styles.SocialMediaArea}>
-            <Text style={styles.SocialMediaAreaText}>تسجيل الدخول عبر حساب فايسبوك</Text>
-            <Image source={require('../../layout/images/Signup_icons/facebook.png')} style={styles.SocialMediaAreaImage}/>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <View style={[styles.SocialMediaArea,{backgroundColor:colors.twitter,}]}>
-            <Text style={[styles.SocialMediaAreaText,{marginRight:20,}]}>تسجيل الدخول عبر حساب تويتر</Text>
-            <Image source={require('../../layout/images/Signup_icons/twitter.png')} style={styles.SocialMediaAreaImage}/>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <View style={[styles.SocialMediaArea,{backgroundColor:colors.backgroundOne,}]}>
-            <Text style={[styles.SocialMediaAreaText,{color:colors.textDarkOne,marginRight:20,}]}>تسجيل الدخول عبر حساب جوجل</Text>
-            <Image source={require('../../layout/images/Signup_icons/google.png')} style={styles.SocialMediaAreaImage}/>
-          </View>
-        </TouchableOpacity>
-      </View>
-
       {/*FormContenArea*/}
       <View style={styles.WrapperFormContenArea}>
-        <Text style={styles.FormContenAreaText}>او الدخول عبر البريد الالكتروني</Text>
+        <Text style={styles.FormContenAreaText}> انشاء حساب عبر البريد الالكتروني </Text>
         <View style={styles.FormContenAreaInput}>
-          <TextInput
-           placeholderTextColor={colors.textDarkOne}
-           placeholder="اسم المستخدم  (كما سيظهر في التعليقات)"
-           style={styles.FormContenAreaInputInput}
-          />
-          <TextInput
-           placeholderTextColor={colors.textDarkOne}
-           placeholder="البريد الالكتروني"
-           style={styles.FormContenAreaInputInput}
-          />
-          <TextInput
-           placeholderTextColor={colors.textDarkOne}
-           placeholder="كلمة السر"
-           secureTextEntry
-           style={styles.FormContenAreaInputInput}
-          />
-          <TextInput
-           placeholderTextColor={colors.textDarkOne}
-           placeholder="تاكيد كلمة السر"
-           secureTextEntry
-           style={styles.FormContenAreaInputInput}
-          />
+
+         {/*Username*/} 
+         <Controller
+          rules={{
+             required: 'تاكد من ادخال اسم المستخدم',
+            }}
+          control={control}
+          name="username"
+          render={({field: {value, onChange, onBlur}, fieldState: {error}}) => ( 
+          <>
+         <View>
+         <TextInput
+          value={value}
+          onChangeText={onChange}
+          onBlur={onBlur}
+          placeholderTextColor={colors.textDarkOne}
+          placeholder="اسم المستخدم  (كما سيظهر في التعليقات)"
+          style={styles.FormContenAreaInputInput}
+          keyboardType="default"/></View> 
+          {error && (
+            <Text style={{color:'red',marginLeft:10, fontFamily:'Montserrat-Medium',fontSize:10,}}>
+             {error.message || 'error'}{/*error*/}
+            </Text>)}</> 
+          )}
+         />
+
+         {/*Email*/} 
+         <Controller
+          rules={{
+             required: 'تاكد من ادخال البريد الالكتروني',
+             pattern: {
+                 value: EMAIL_REGEX,
+                 message:'تاكد من ادخال البريد الالكتروني بشكل صحيح',
+             }
+            }}
+          control={control}
+          name="email"
+          render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (
+          <>
+         <View>
+         <TextInput 
+          value={value}
+          onChangeText={onChange}
+          onBlur={onBlur}
+          placeholderTextColor={colors.textDarkOne}
+          placeholder="البريد الالكتروني"
+          style={styles.FormContenAreaInputInput} 
+          keyboardType="email-address"/></View>
+          {error && (
+            <Text style={{color:'red',marginLeft:10, fontFamily:'Montserrat-Medium',fontSize:10,}}>
+             {error.message || 'error'}{/*error*/}
+            </Text>)}</>
+          )}
+         /> 
+
+         {/*Password*/} 
+         <Controller
+          rules={{
+              required: 'تاكد من كلمة المرور',
+              minLength: {
+                  value: 8,
+                  message:'يجب ألا تقل كلمة المرور عن 8 أحرف',
+                 },
+              maxLength: {
+                 value: 24,
+                 message:'يجب أن تكون كلمة المرور 24 حرفًا كحد أقصى',
+                 },
+             }}
+          control={control}
+          name="password"
+          render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (
+          <>
+         <View>
+         <TextInput 
+          value={value}
+          onChangeText={onChange}
+          onBlur={onBlur}
+          placeholderTextColor={colors.textDarkOne}
+          placeholder="كلمة السر"
+          secureTextEntry
+          style={styles.FormContenAreaInputInput}
+          keyboardType="default"/></View>
+          {error && (
+            <Text style={{color:'red',marginLeft:10, fontFamily:'Montserrat-Medium',fontSize:10,}}>
+             {error.message || 'error'}{/*error*/}
+            </Text>)}</>
+          )}
+         />
+
+          {/*PasswordRepeat*/} 
+          <Controller
+          rules={{
+              validate: value =>
+                value === pwd || 'كلمة المرور غير متطابقة',
+             }}
+          control={control}
+          name="password-repeat"
+          render={({field: {value, onChange, onBlur}, fieldState: {error}}) => (
+          <>
+         <View>
+         <TextInput 
+          value={value}
+          onChangeText={onChange}
+          onBlur={onBlur}
+          placeholderTextColor={colors.textDarkOne}
+          placeholder="تاكيد كلمة السر"
+          secureTextEntry
+          style={styles.FormContenAreaInputInput} 
+          keyboardType="default"/></View>
+          {error && (
+            <Text style={{color:'red',marginLeft:10, fontFamily:'Montserrat-Medium',fontSize:11,}}>
+             {error.message || 'error'}{/*error*/}
+            </Text>)}</>
+          )}
+         />
           
         </View>
 
         {/*FormContenAreaSubmit*/}
         <View style={styles.FormContenAreaSubmit}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleSubmit(WhenSignup)}>
             <Text style={styles.FormContenAreaSubmitText}>انشاء حساب جديد</Text>
           </TouchableOpacity>
 
@@ -128,33 +223,8 @@ const styles = StyleSheet.create({
         fontWeight:'bold',
         color:colors.background,
     },
-    WrapperSocialMediaArea: {
-        //borderColor:colors.textDark,
-        //borderWidth:1,
-        marginTop:20,
-        marginHorizontal:20,
-    },
-    SocialMediaArea: {
-        flexDirection:'row',
-        justifyContent:'flex-end',
-        alignItems:'center',
-        backgroundColor:colors.facebook,
-        marginTop:7,
-        paddingVertical:5,
-        borderRadius:8,
-    },
-    SocialMediaAreaText: {
-        marginRight:20,
-        color:colors.background,
-        textAlign:'center',
-    },
-    SocialMediaAreaImage: {
-        height:30,
-        width:30,
-        marginRight:10,
-    },
     WrapperFormContenArea: {
-        marginTop:20,
+        marginTop:'10%',
         marginHorizontal:20,
     },
     FormContenAreaText: {

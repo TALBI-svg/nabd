@@ -1,66 +1,114 @@
-import React from 'react'
-import { StyleSheet,View, Text,Image,StatusBar, TouchableOpacity, SafeAreaView, TouchableOpacityBase, TextInput,} from 'react-native';
+import React,{useState} from 'react'
+import { StyleSheet,View, Text,Image,StatusBar,Alert, TouchableOpacity, SafeAreaView, TouchableOpacityBase, TextInput,} from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import { useNavigation } from '@react-navigation/native';
+import { Auth } from 'aws-amplify'
+import {useForm, Controller} from 'react-hook-form';
+import {useRoute} from '@react-navigation/native';
+ 
 import colors from '../../layout/colors/colors'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
 
 export default function EmailConfirmation() {
+    const navigation = useNavigation();
+    const route  = useRoute();
+    const {control, handleSubmit,formState: {errors},watch} = useForm({
+      defaultValues: {username: route?.params?.username},
+    });
+
+    const username = watch('username');
+
+    const WhenConfirm = async data  => {
+      try {
+        await Auth.confirmSignUp(data.username, data.code);
+        navigation.navigate('Signin')
+      } catch (e) {
+          Alert.alert('Oops', e.message);
+      }
+      //console.log(data);
+      //user validation
+      //navigation.navigate('Home');
+    };
+
+    const WhenResend = async ()  => {
+      try {
+        await Auth.resendSignUp(username);
+        Alert.alert('تحقق من بريدك ','تم إعادة إرسال الرمز إلى بريدك الإلكتروني');
+      } catch (e) {
+        Alert.alert('Oops',e.message);
+      }
+    };
+
   return (
     <View style={styles.containner}>
       {/*Header*/}
       <SafeAreaView>
         <View style={styles.WrapperHeader}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Signup')}>
             <AntDesign name="arrowleft" size={20} color={colors.background} style={styles.HeaderLeft}/>
           </TouchableOpacity>
           <Text style={styles.HeaderRight}>تاكيد البريدالالكتروني</Text>
         </View>
       </SafeAreaView>
-      {/*SocialMediaArea*/}
-      <View style={styles.WrapperSocialMediaArea}>
-        <TouchableOpacity>
-          <View style={styles.SocialMediaArea}>
-            <Text style={styles.SocialMediaAreaText}>تسجيل الدخول عبر حساب فايسبوك</Text>
-            <Image source={require('../../layout/images/Signup_icons/facebook.png')} style={styles.SocialMediaAreaImage}/>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <View style={[styles.SocialMediaArea,{backgroundColor:colors.twitter,}]}>
-            <Text style={[styles.SocialMediaAreaText,{marginRight:20,}]}>تسجيل الدخول عبر حساب تويتر</Text>
-            <Image source={require('../../layout/images/Signup_icons/twitter.png')} style={styles.SocialMediaAreaImage}/>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <View style={[styles.SocialMediaArea,{backgroundColor:colors.backgroundOne,}]}>
-            <Text style={[styles.SocialMediaAreaText,{color:colors.textDarkOne,marginRight:20,}]}>تسجيل الدخول عبر حساب جوجل</Text>
-            <Image source={require('../../layout/images/Signup_icons/google.png')} style={styles.SocialMediaAreaImage}/>
-          </View>
-        </TouchableOpacity>
-      </View>
-
       {/*FormContenArea*/}
       <View style={styles.WrapperFormContenArea}>
-        <Text style={styles.FormContenAreaText}>تاكيد البريد الالكتروني</Text>
+        <Text style={styles.FormContenAreaText}>تم إرسال رمز التحقق إلى بريدك الإلكتروني</Text>
         <View style={styles.FormContenAreaInput}>
-          <TextInput
-           placeholderTextColor={colors.textDarkOne}
-           placeholder="اسم المستخدم (كما سيظهر في التعليقات)"
-           style={styles.FormContenAreaInputInput}
-          />
-          <TextInput
-           placeholderTextColor={colors.textDarkOne}
-           placeholder="رمز التاكيد"
-           secureTextEntry
-           style={styles.FormContenAreaInputInput}
-          />
+          {/*Username*/} 
+         <Controller
+         rules={{
+           required: 'تاكد من ادخال اسم المستخدم',
+         }}
+         control={control}
+         name="username"
+         render={({field: {value, onChange, onBlur}, fieldState: {error}}) => ( 
+         <>
+         <View>
+         <TextInput 
+         value={value}
+         onChangeText={onChange}
+         onBlur={onBlur}
+         placeholderTextColor={colors.textDarkOne}
+         placeholder="اسم المستخدم (كما سيظهر في التعليقات)"
+         style={styles.FormContenAreaInputInput} 
+         keyboardType="default"/></View> 
+         {error && (
+          <Text style={{color:'red',marginLeft:10, fontFamily:'Montserrat-Medium',fontSize:10,}}>
+           {error.message || 'error'}{/*error*/}
+          </Text>)}</> 
+         )}
+        />
+         <Controller
+         rules={{
+           required: 'تاكد من ادخال رمز التاكيد',
+         }}
+         control={control}
+         name="code"
+         render={({field: {value, onChange, onBlur}, fieldState: {error}}) => ( 
+         <>
+         <View>
+         <TextInput 
+         value={value}
+         onChangeText={onChange}
+         onBlur={onBlur}
+         placeholderTextColor={colors.textDarkOne}
+         placeholder="رمز التاكيد"
+         secureTextEntry
+         style={styles.FormContenAreaInputInput}
+         keyboardType="default"/></View> 
+         {error && (
+          <Text style={{color:'red',marginLeft:10, fontFamily:'Montserrat-Medium',fontSize:10,}}>
+           {error.message || 'error'}{/*error*/}
+          </Text>)}</>  
+         )}
+        />
+
         </View>
 
         {/*FormContenAreaSubmit*/}
         <View style={styles.FormContenAreaSubmit}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={handleSubmit(WhenConfirm)}>
             <Text style={styles.FormContenAreaSubmitText}>تاكيد</Text>
           </TouchableOpacity>
 
@@ -72,8 +120,8 @@ export default function EmailConfirmation() {
             <Text style={styles.FormContenAreaBottomText}>الرجوع الى انشاء حساب</Text>
           </TouchableOpacity> 
 
-          <TouchableOpacity>
-            <Text style={[styles.FormContenAreaBottomText,{marginTop:10,marginLeft:5,}]}>ارسال رمزالتاكيد مجددا</Text>
+          <TouchableOpacity onPress={handleSubmit(WhenResend)}>
+            <Text style={[styles.FormContenAreaBottomText,{marginTop:10,marginLeft:5,}]}>ارسال رمز التاكيد مجددا</Text>
           </TouchableOpacity>  
         </View>
 
@@ -110,39 +158,15 @@ const styles = StyleSheet.create({
         fontWeight:'bold',
         color:colors.background,
     },
-    WrapperSocialMediaArea: {
-        //borderColor:colors.textDark,
-        //borderWidth:1,
-        marginTop:20,
-        marginHorizontal:20,
-    },
-    SocialMediaArea: {
-        flexDirection:'row',
-        justifyContent:'flex-end',
-        alignItems:'center',
-        backgroundColor:colors.facebook,
-        marginTop:7,
-        paddingVertical:5,
-        borderRadius:8,
-    },
-    SocialMediaAreaText: {
-        marginRight:20,
-        color:colors.background,
-        textAlign:'center',
-    },
-    SocialMediaAreaImage: {
-        height:30,
-        width:30,
-        marginRight:10,
-    },
+  
     WrapperFormContenArea: {
-        marginTop:20,
+        marginTop:'10%',
         marginHorizontal:20,
     },
     FormContenAreaText: {
-        fontSize:16,
+        fontSize:12,
         fontWeight:'bold',
-        color:colors.textDark,
+        color:colors.green,
         marginRight:3,
     },
     FormContenAreaInput: {

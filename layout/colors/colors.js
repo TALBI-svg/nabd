@@ -13,6 +13,7 @@ const colors = {
     yellow:'#ffea00',
     facebook:'#1A7BBB',
     twitter:'#1DA1F2',
+    green:'#02c39a',
    
 };
 export default colors;

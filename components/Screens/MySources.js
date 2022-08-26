@@ -12,6 +12,9 @@ import BottomNavBar from './BottomNavBar';
 
 export default function MySources() {
   const navigation = useNavigation();
+  const MySourcesSettings = () => {
+    navigation.navigate('MySourcesSettings')
+  }
 
   
   return (
@@ -20,10 +23,10 @@ export default function MySources() {
       <SafeAreaView>
         <View style={styles.WrapperHeader}>
             <View style={styles.HeaderLeft}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={MySourcesSettings}>
                 <Image source={require('../../layout/images/Profile_icons/settings_1.png')} style={styles.HeaderLeftImage}/></TouchableOpacity>
               <TouchableOpacity>
-                <Feather name="search" size={20} color={colors.background} style={styles.HeaderLeftIcon}/></TouchableOpacity>
+                <Feather name="search" size={20} color={colors.textDarkOne} style={styles.HeaderLeftIcon}/></TouchableOpacity>
 
             </View>
           
@@ -62,7 +65,7 @@ export default function MySources() {
 const styles = StyleSheet.create({
     containner: {
         flex:1,
-        backgroundColor:colors.backgroundScreen,
+        backgroundColor:colors.backgroundOne,
         height: hp('100%'), // 100% of height device screen
         width: wp('100%')   // 100% of width device screen
     },
@@ -70,9 +73,9 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center',
-        paddingVertical:15,
-        paddingHorizontal:15,
-        backgroundColor:colors.primery,
+        paddingVertical:10,
+        paddingHorizontal:10,
+        backgroundColor:colors.background,
   
     },
     HeaderLeft: {
@@ -87,14 +90,16 @@ const styles = StyleSheet.create({
         height:20,
         width:20,
         marginRight:20,
+        backgroundColor:colors.textDarkOne,
+        borderRadius:30,
     },
     HeaderRight: {
         fontSize:16,
         fontWeight:'bold',
-        color:colors.background,
+        color:colors.textDarkOne,
     },
     WrapperMySourcesArea: {
-        borderBottomColor:colors.light,
+        borderBottomColor:colors.background,
         borderBottomWidth:0.3,
         paddingVertical:10,
   
@@ -127,7 +132,7 @@ const styles = StyleSheet.create({
     }, 
     ///////////////////////////////////////////////////
     WrapperMySource: {
-      borderBottomColor:colors.light,
+      borderBottomColor:colors.background,
       borderBottomWidth:0.3,
       paddingVertical:10,
 
