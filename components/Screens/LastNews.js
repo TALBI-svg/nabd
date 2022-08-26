@@ -39,39 +39,6 @@ export default function LastNews() {
         )
     }
 
-    const renderPostTextItem = ({item}) => {
-        return(
-            <TouchableOpacity>
-            <View style={styles.PostTextArea}>
-                <View style={styles.PostTextAreaTitle}>
-                    <Text style={styles.PostTextAreaTitleLeft}>{item.time}</Text>
-                    <View style={styles.PostTextAreaTitleRight}>
-                        <Text style={styles.PostTextAreaTitleRightText}>{item.name}</Text>
-                        <Image source={item.profile} style={styles.PostTextAreaTitleRightImage}/>
-                    </View>
-                </View>
-
-                <View style={styles.PostTextAreaDescripe}>
-                    <Text style={styles.PostTextAreaDescripeText}>{item.descripe}</Text>
-                    <Image source={item.image}  style={styles.PostTextAreaDescripeImage}/>
-                </View>
-
-                <View style={styles.PostTextAreaBottom}>
-                  <TouchableOpacity>
-                    <View style={styles.PostTextAreaBottomLeft}>
-                      <Text style={styles.PostTextAreaBottomLeftText}>{item.comments}</Text>
-                      <Image source={require('../../layout/images/Profile_icons/comment.png')}  style={styles.PostTextAreaBottomLeftImage}/>
-                    </View>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity>
-                    <Image source={require('../../layout/images/Profile_icons/shear.png')}  style={styles.PostTextAreaBottomRight}/>
-                  </TouchableOpacity>
-                </View>
-            </View></TouchableOpacity>
-        )
-    }
-
 
   return (
     <View style={styles.containner}>
@@ -152,14 +119,6 @@ export default function LastNews() {
           </View>
           {/*PostTextArea*/}
           <View style={styles.WrapperPostTextArea}>
-            {/*<FlatList
-             data={PostTextData}
-             renderItem={renderPostTextItem}
-             keyExtractor={(item) => item.id}
-             horizontal={false}
-             //inverted
-             showsVerticalScrollIndicator={false}
-            />*/}
             {PostTextData.map((item) =>{
                 return(
                     <TouchableOpacity key={item.id}>
