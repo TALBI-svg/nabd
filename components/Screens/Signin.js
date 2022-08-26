@@ -30,7 +30,7 @@ export default function Signin() {
       navigation.navigate('LastNews')
       };
       useEffect(() => {
-        GoogleSignin.configure()  
+        GoogleSignin.configure()     
       
       }, [])
     
