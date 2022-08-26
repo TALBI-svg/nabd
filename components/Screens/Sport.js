@@ -1,71 +1,29 @@
-import React,{useState,useEffect,useContext} from 'react'
+import React from 'react'
 import { StyleSheet,View, Text,Image,StatusBar, TouchableOpacity, SafeAreaView,FlatList,TextInput, ScrollView, ImageBackground,} from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
-import { NewsContext } from './../../api/Context'
-import moment from "moment";
-import 'moment/locale/ar-ma'  // without this line it didn't work
-moment.locale('ar-ma')
 
 import colors from '../../layout/colors/colors'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
 import LeaguesTypeData from '../../layout/data/LeaguesTypeData';
+import MatchesData from '../../layout/data/MatchesData';
 import BottomNavBar from './BottomNavBar';
-import MatchesData from '../../layout/data/MatchesData'
-import SportContent from './SubSources/SportContent';
-
 
 
 
 export default function Sport() {
   const navigation = useNavigation();
-  const SportViewMore = () => {
-    navigation.navigate('SportViewMore')
-  }
-  const {data} = useContext(NewsContext);
-  
-
-
-
 
   
-  const renderLeaguesItem = ({item}) => {
-    return(
-        <TouchableOpacity>
-          <View style={styles.LeaguesArea}>
-            <Image source={item.image} resizeMode="contain" style={styles.LeaguesAreaImage}/>
-          <Text style={styles.LeaguesAreaText}>{item.name}</Text>
-        </View></TouchableOpacity>
-      )
-    }
-
-    const renderMatchItem = ({item}) => {
-      return(
-        <View style={styles.MImatchesBottom}>
-        <View style={styles.MImatchesBottomBottom}>
-  
-          <View  style={styles.MImatchesBottomBottomLeft}>
-            <Image source={{uri: item.away_team.logo}} style={styles.MImatchesBottomBottomTeamImage}/>
-            <Text style={styles.MImatchesBottomBottomTeamText}>{item.away_team.name}</Text>
-          </View>
-  
-          <View style={styles.MImatchesBottomBottomMidlle}>
-            <Text style={styles.MImatchesBottomBottomMidlleText}>{moment(item.match_start).format('lll')}</Text>
-            <View style={styles.MImatchesBottomBottomMidlleBottom}>
-              <Text style={styles.MImatchesBottomBottomMidlleBottomText}>{item.status}</Text>
-              <Text style={styles.MImatchesBottomBottomMidlleBottomTextOne}>|</Text>
-              <Text style={styles.MImatchesBottomBottomMidlleBottomTextTwo}>{item.stats.ht_score}</Text>
-            </View>
-          </View>
-  
-          <View style={styles.MImatchesBottomBottomRight}>
-            <Text style={styles.MImatchesBottomBottomTeamText}>{item.home_team.name}</Text>
-            <Image source={{uri: item.home_team.logo}} style={styles.MImatchesBottomBottomTeamImage}/>
-          </View>
-
-        </View>
-      </View>
-      )
+    const renderLeaguesItem = ({item}) => {
+        return(
+            <TouchableOpacity>
+              <View style={styles.LeaguesArea}>
+                <Image source={item.image} resizeMode="contain" style={styles.LeaguesAreaImage}/>
+              <Text style={styles.LeaguesAreaText}>{item.name}</Text>
+            </View></TouchableOpacity>
+        )
     }
     
     
@@ -76,7 +34,7 @@ export default function Sport() {
           <View style={styles.WrapperHeader}>
             <TouchableOpacity>
               <View style={styles.HeaderLeft}>
-                <Feather name="plus" size={10} color={colors.textDarkOne} style={styles.HeaderLeftIcon}/>
+                <Feather name="plus" size={10} color={colors.background} style={styles.HeaderLeftIcon}/>
                 <Image source={require('../../layout/images/Profile_icons/sport_1.png')} style={styles.HeaderLeftImage}/>
               </View>
             </TouchableOpacity>
@@ -93,7 +51,7 @@ export default function Sport() {
              showsHorizontalScrollIndicator={false}
             />
           </View>
-          
+          <ScrollView showsVerticalScrollIndicator={false}>
           {/*FvTeamsArea*/}
           <View style={styles.WrapperFvTeamsArea}>
             <Text style={styles.FvTeamsAreaText}>الفرق المفضلة</Text>
@@ -115,22 +73,51 @@ export default function Sport() {
                 </View>
             </View>
             <View style={styles.WrapperMImatchesBottom}>
-            <FlatList
-             data={data.slice(0,5)}
-             renderItem={renderMatchItem}
-             keyExtractor={(item) => item.id }
-             horizontal={false}
-             showsHorizontalScrollIndicator={false}
-            />
+             {/* <FlatList
+               data={ }
+               renderItem={renderMatchesItem}
+               keyExtractor={(item) => item.id}
+               horizontal={false}
+               numColumns={1}
+               showsVerticalScrollIndicator={false}
+             />*/}
+             {MatchesData.map((item) =>{
+              return(
+                <View key={item.id} style={styles.MImatchesBottom}>
+                <View style={styles.MImatchesBottomTitle}>
+                  <Text style={styles.MImatchesBottomTitleText}>{item.date}</Text>
+                </View>
+
+                <View style={styles.MImatchesBottomBottom}>
+
+                  <View  style={styles.MImatchesBottomBottomLeft}>
+                    <Text style={styles.MImatchesBottomBottomLeftText}>{item.teamLeft}</Text>
+                    <Feather name="circle" size={20} color={colors.primery} style={styles.MImatchesBottomBottomLeftIcon}/>
+                  </View>
+
+                  <View style={styles.MImatchesBottomBottomMidlle}>
+                    <Text style={styles.MImatchesBottomBottomMidlleText}>{item.result}</Text>
+                    <View style={styles.MImatchesBottomBottomMidlleBottom}>
+                      <Text style={styles.MImatchesBottomBottomMidlleBottomText}>{item.league}</Text>
+                      <Text style={styles.MImatchesBottomBottomMidlleBottomTextOne}>|</Text>
+                      <Text style={styles.MImatchesBottomBottomMidlleBottomTextTwo}>{item.done}</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.MImatchesBottomBottomRight}>
+                    <Text style={styles.MImatchesBottomBottomRightText}>{item.teamRight}</Text>
+                    <Feather name="circle" size={20} color={colors.textDarkOne} style={styles.MImatchesBottomBottomRightIcon}/>
+                  </View>
+
+                </View>
+            </View>
+            )}
+          )}
               <View style={styles.MImatchesShowMore}>
-                <TouchableOpacity onPress={SportViewMore}>
+                <TouchableOpacity>
                   <Text style={styles.MImatchesShowMoreText}>عرض المزيد</Text>
                 </TouchableOpacity>
               </View>
-            </View>
-            {/*SprotContent*/}
-            <View style={styles.WrapperSportContent}>
-              {/*<SportContent/>*/}
             </View>
         
           </View>
@@ -138,7 +125,7 @@ export default function Sport() {
 
 
 
-          
+          </ScrollView> 
         <BottomNavBar/>
       </View>
   )
@@ -154,9 +141,9 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center',
-        paddingVertical:10,
-        paddingHorizontal:10,
-        backgroundColor:colors.background,
+        paddingVertical:15,
+        paddingHorizontal:15,
+        backgroundColor:colors.primery,
     },
     HeaderLeft: {
         flexDirection:'row',
@@ -165,13 +152,11 @@ const styles = StyleSheet.create({
     HeaderLeftImage: {
         height:20,
         width:20,
-        backgroundColor:colors.textDarkOne,
-        borderRadius:30,
     },
     HeaderRight: {
         fontSize:16,
         fontWeight:'bold',
-        color:colors.textDarkOne,
+        color:colors.background,
     },
     WrepperLeaguesArea: {
         marginTop:10,
@@ -266,13 +251,20 @@ const styles = StyleSheet.create({
         fontWeight:'300', 
         color:colors.primeryOne,
     },
-    WrapperMImatchesBottom: {},
+    WrapperMImatchesBottom: {
+        marginBottom:60,
+    },
     MImatchesBottom: {},
     MImatchesBottomTitle: {
         paddingVertical:5,
         paddingRight:5,
         //backgroundColor:colors.light,
 
+    },
+    MImatchesBottomTitleText: {
+        fontSize:14,
+        fontWeight:'300', 
+        color:colors.textDarkOne,
     },
     MImatchesBottomBottom: {
         flexDirection:'row',
@@ -281,7 +273,6 @@ const styles = StyleSheet.create({
         backgroundColor:colors.background,
         paddingVertical:10,
         paddingHorizontal:5,
-        marginTop:5,
     },
     MImatchesBottomBottomLeft: {
         flexDirection:'row',
@@ -335,23 +326,13 @@ const styles = StyleSheet.create({
         alignItems:'center',
 
     },
-    MImatchesBottomBottomTeamText: {
+    MImatchesBottomBottomRightText: {
         marginRight:5,
-        fontSize:12,
-        width:80,
-        textAlign:'center',
+        fontSize:14,
         fontWeight:'500',
         color:colors.textDark,
-        paddingHorizontal:5,
     },
     MImatchesBottomBottomRightIcon: {},
-    MImatchesBottomBottomTeamImage: {
-      borderColor:colors.primery,
-      borderWidth:1,
-      height:30,
-      width:30,
-      borderRadius:30,
-    },
     MImatchesShowMore: {
         flexDirection:'row',
         justifyContent:'center',
@@ -359,15 +340,11 @@ const styles = StyleSheet.create({
     },
     MImatchesShowMoreText: {
         backgroundColor: colors.primery,
-        color:colors.background,
         marginTop:10,
         paddingVertical:10,
         paddingHorizontal:164.5,
         borderRadius:10,
-    },
-    WrapperSportContent: {
-      marginTop:5,
-      marginBottom:50,
+        color:colors.background,
     },
     
     

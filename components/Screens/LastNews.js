@@ -1,19 +1,21 @@
-import React,{useState,useContext,useRef} from 'react'
+import React,{useState} from 'react'
 import { StyleSheet,View, Text,Image,RefreshControl,StatusBar,TouchableOpacity,SafeAreaView,FlatList,TextInput,ScrollView,ImageBackground,} from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { useNavigation } from '@react-navigation/native';
-import { NewsContext } from './../../api/Context'
 
 import colors from '../../layout/colors/colors'
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import Feather from 'react-native-vector-icons/Feather'
-import Trending from './SubSources/Trending';
+import LeaguesTypeData from '../../layout/data/LeaguesTypeData';
+import MatchesData from '../../layout/data/MatchesData';
 import BottomNavBar from './BottomNavBar';
-import TrendingContent from './SubSources/TrendingContent';
+
+import TrendingNewsData from '../../layout/data/TrendingNewsData';
+import PostTextData from '../../layout/data/PostTextData';
 
 
 export default function LastNews() {
   const navigation = useNavigation();
-  const {articles} = useContext(NewsContext);
 
 
   {/*RefreshScreen*/}
@@ -26,7 +28,49 @@ export default function LastNews() {
 
 
 
-  
+    const renderTrendItem = ({item}) => {
+        return(
+            <TouchableOpacity>
+            <View style={styles.TrendingNewsAreaBottomContent}>
+                <Image source={item.image} style={styles.TrendingNewsAreaBottomContentImage}/>
+                <Text style={styles.TrendingNewsAreaBottomContentText}>{item.title}</Text>
+                <Text style={styles.TrendingNewsAreaBottomContentTextOne}>{item.time}</Text>
+            </View></TouchableOpacity>
+        )
+    }
+
+    const renderPostTextItem = ({item}) => {
+        return(
+            <TouchableOpacity>
+            <View style={styles.PostTextArea}>
+                <View style={styles.PostTextAreaTitle}>
+                    <Text style={styles.PostTextAreaTitleLeft}>{item.time}</Text>
+                    <View style={styles.PostTextAreaTitleRight}>
+                        <Text style={styles.PostTextAreaTitleRightText}>{item.name}</Text>
+                        <Image source={item.profile} style={styles.PostTextAreaTitleRightImage}/>
+                    </View>
+                </View>
+
+                <View style={styles.PostTextAreaDescripe}>
+                    <Text style={styles.PostTextAreaDescripeText}>{item.descripe}</Text>
+                    <Image source={item.image}  style={styles.PostTextAreaDescripeImage}/>
+                </View>
+
+                <View style={styles.PostTextAreaBottom}>
+                  <TouchableOpacity>
+                    <View style={styles.PostTextAreaBottomLeft}>
+                      <Text style={styles.PostTextAreaBottomLeftText}>{item.comments}</Text>
+                      <Image source={require('../../layout/images/Profile_icons/comment.png')}  style={styles.PostTextAreaBottomLeftImage}/>
+                    </View>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity>
+                    <Image source={require('../../layout/images/Profile_icons/shear.png')}  style={styles.PostTextAreaBottomRight}/>
+                  </TouchableOpacity>
+                </View>
+            </View></TouchableOpacity>
+        )
+    }
 
 
   return (
@@ -34,9 +78,9 @@ export default function LastNews() {
         {/*Header*/}
         <SafeAreaView>
           <View style={styles.WrapperHeader}>
-            <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+            <TouchableOpacity>
               <View style={styles.HeaderLeft}>
-                <Feather name="search" size={20} color={colors.textDarkOne} style={styles.HeaderLeftIcon}/>
+                <Feather name="chevron-down" size={20} color={colors.background} style={styles.HeaderLeftIcon}/>
               </View>
             </TouchableOpacity>
             <Text style={styles.HeaderRight}>اخر الاخبار</Text>
@@ -74,7 +118,7 @@ export default function LastNews() {
                 <Text style={styles.NavHomeAreaFieldText}>فيديو</Text>
             </View></TouchableOpacity>
 
-            <TouchableOpacity onPress={() => navigation.navigate('World')}>
+            <TouchableOpacity>
             <View style={styles.NavHomeAreaField}>
                 <View style={styles.NavHomeAreaFieldTop}>
                 <Image source={require('../../layout/images/Home_icons/world.png')} resizeMode="contain" style={styles.NavHomeAreaFieldTopImage}/></View>
@@ -97,30 +141,63 @@ export default function LastNews() {
 
             <View style={styles.TrendingNewsAreaBottom}>
               <FlatList
-                data={articles}
-                renderItem={({item}) =>
-                    <Trending
-                urlToImage = {item.urlToImage}
-                title = {item.title}
-                description = {item.description}
-                author = {item.author}
-                publishedAt = {item.publishedAt}
-                sourceName = {item.source.name} 
-                url={item.url}    
-                />}
-                keyExtractor = {(item) => item.title}
+                data={TrendingNewsData}
+                renderItem={renderTrendItem}
+                keyExtractor={(item) => item.id}
                 horizontal={true}
                 inverted
                 showsHorizontalScrollIndicator={false}
                 />
-
             </View>
           </View>
-          {/*PostTextArea
+          {/*PostTextArea*/}
           <View style={styles.WrapperPostTextArea}>
-            <TrendingContent/>
-          </View>*/}
-         
+            {/*<FlatList
+             data={PostTextData}
+             renderItem={renderPostTextItem}
+             keyExtractor={(item) => item.id}
+             horizontal={false}
+             //inverted
+             showsVerticalScrollIndicator={false}
+            />*/}
+            {PostTextData.map((item) =>{
+                return(
+                    <TouchableOpacity key={item.id}>
+            <View style={styles.PostTextArea}>
+                <View style={styles.PostTextAreaTitle}>
+                    <Text style={styles.PostTextAreaTitleLeft}>{item.time}</Text>
+                    <View style={styles.PostTextAreaTitleRight}>
+                        <Text style={styles.PostTextAreaTitleRightText}>{item.name}</Text>
+                        <Image source={item.profile} style={styles.PostTextAreaTitleRightImage}/>
+                    </View>
+                </View>
+            
+
+                <View style={styles.PostTextAreaDescripe}>
+                    <Text style={styles.PostTextAreaDescripeText}>{item.descripe}</Text>
+                    <Image source={item.image}  style={styles.PostTextAreaDescripeImage}/>
+                </View>
+
+                <View style={styles.PostTextAreaBottom}>
+                  <TouchableOpacity>
+                    <View style={styles.PostTextAreaBottomLeft}>
+                      <Text style={styles.PostTextAreaBottomLeftText}>{item.comments}</Text>
+                      <Image source={require('../../layout/images/Profile_icons/comment.png')}  style={styles.PostTextAreaBottomLeftImage}/>
+                    </View>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity>
+                    <Image source={require('../../layout/images/Profile_icons/shear.png')}  style={styles.PostTextAreaBottomRight}/>
+                  </TouchableOpacity>
+                </View>
+            </View></TouchableOpacity>
+
+
+                )}
+              )}
+
+
+          </View>
         
 
     </ScrollView>
@@ -140,20 +217,18 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         justifyContent:'space-between',
         alignItems:'center',
-        paddingVertical:10,
-        paddingHorizontal:10,
-        backgroundColor:colors.background,
+        paddingVertical:15,
+        paddingHorizontal:15,
+        backgroundColor:colors.primery,
     },
     HeaderLeft: {
-        padding:5,
-        borderRadius:30,
-        backgroundColor:colors.backgroundOne,
+        flexDirection:'row',
 
     },
     HeaderRight: {
         fontSize:16,
         fontWeight:'bold',
-        color:colors.textDarkOne,
+        color:colors.background,
     },
     WrapperNavHomeArea: {
         flexDirection:'row',
@@ -332,7 +407,6 @@ const styles = StyleSheet.create({
         width:17,
         marginLeft:5,
     },
-    
 
     
 
